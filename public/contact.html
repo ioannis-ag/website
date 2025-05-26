@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Επικοινωνία</title>
+  <link rel="stylesheet" href="/contact.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto Condensed:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1>ΕΠΙΚΟΙΝΩΝΙΑ</h1>
+    <nav id="main-nav">
+      <a href="/main.html">ΑΡΧΙΚΗ</a>
+      <a href="/activities.html">ΔΡΑΣΤΗΡΙΟΤΗΤΕΣ</a>
+      <a href="/contact.html">ΕΠΙΚΟΙΝΩΝΙΑ</a>
+      <a href="/leaderboard.html"><i data-lucide="trophy"></i></a>
+      <a href="/register.html" id="register-link"><i data-lucide="user-plus"></i></a>
+      <a href="/login.html" id="login-link"><i data-lucide="log-in"></i></a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="contact-container">
+      <h2>Επικοινωνήστε Μαζί Μας</h2>
+      <form id="contact-form">
+        <label for="name">Όνομα</label>
+        <input type="text" id="name" name="name" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+        <label for="message">Μήνυμα</label>
+        <textarea id="message" name="message" required></textarea>
+        <button type="submit">Αποστολή</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-left">
+        <p>
+          <strong>Διεύθυνση:</strong> Λεωφόρος Εθελοντών 123, Αθήνα 10435<br />
+          <strong>Τηλέφωνο:</strong> <a href="tel:+302112345678">(+30) 211 234 5678</a><br />
+          <strong>Email:</strong> <a href="mailto:info@volunteer.gr">info@volunteer.gr</a>
+        </p>
+      </div>
+      <div class="footer-right">
+        <a href="/" target="_blank"><i data-lucide="instagram"></i></a>
+        <a href="/" target="_blank"><i data-lucide="facebook"></i></a>
+        <a href="/" target="_blank"><i data-lucide="twitter"></i></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2025 Εθελοντικός Οργανισμός Νεολαίας
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const formData = Object.fromEntries(new FormData(e.target).entries());
+
+      const response = await fetch('/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      const messageBox = document.createElement('p');
+      messageBox.style.color = response.ok ? 'green' : 'red';
+      messageBox.textContent = data.message || 'Σφάλμα κατά την αποστολή.';
+      e.target.after(messageBox);
+    });
+
+    fetch('/profile')
+      .then(res => res.json())
+      .then(data => {
+        const user = data?.user;
+        if (!user) return;
+
+        const nav = document.getElementById('main-nav');
+        const register = document.getElementById('register-link');
+        const login = document.getElementById('login-link');
+        if (register) register.remove();
+        if (login) login.remove();
+
+        if (user.role === 'admin') {
+          const admin = document.createElement('a');
+          admin.href = '/admin.html';
+          admin.innerHTML = `<i data-lucide="settings"></i>`;
+          nav.appendChild(admin);
+        }
+
+        const profile = document.createElement('a');
+        profile.href = '/profile.html';
+        profile.innerHTML = `<i data-lucide="user"></i>`;
+        nav.appendChild(profile);
+
+        const logout = document.createElement('a');
+        logout.href = '/logout';
+        logout.id = 'logout-link';
+        logout.innerHTML = `<i data-lucide="log-out"></i>`;
+        nav.appendChild(logout);
+
+        lucide.createIcons();
+      });
+    lucide.createIcons();
+  </script>
+</body>
+</html>
