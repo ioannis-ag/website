@@ -172,4 +172,8 @@ router.post('/contact', (req, res) => {
   res.json({ message: 'Το μήνυμά σας εστάλη στο support@volunteer.gr!' });
 });
 
+router.get('/', (req, res) => {
+  res.sendFile('main.html', { root: './public' });
+});
+
 module.exports = router;
