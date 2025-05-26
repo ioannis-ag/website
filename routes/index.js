@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const database = require('../controllers/database');
 const bcrypt = require('bcrypt');
+const path = require('path');
 
 const isAuthenticated = (req, res, next) => {
   if (req.session.userId) return next();
@@ -70,17 +71,28 @@ router.post('/delete_account', isAuthenticated, (req, res) => {
 });
 
 router.get('/events', (req, res) => {
-  database.getEvents(req.session.userId, (err, events) => {
+  const userId = req.session.userId;
+
+  database.getEvents(userId, (err, events) => {
     if (err) return res.status(500).json({ error: 'Server error' });
-    const upcoming = events.filter(e => !e.completed);
-    const completed = events.filter(e => e.completed);
+
+    const upcoming = events.filter(e => !e.completed).map(event => ({
+      ...event,
+      attending: event.attendees?.includes(userId)
+    }));
+
+    const completed = events.filter(e => e.completed).map(event => ({
+      ...event,
+      attending: event.attendees?.includes(userId)
+    }));
+
     res.json({ upcoming, completed });
   });
 });
 
 router.post('/events', isAuthenticated, isAdmin, (req, res) => {
-  const { name, date, location } = req.body;
-  database.addEvent({ name, date, location }, (err) => {
+  const { name, date, location, description, image } = req.body;
+  database.addEvent({ name, date, location, description, image }, (err) => {
     if (err) return res.status(400).json({ error: err.message });
     res.json({ message: 'Event added' });
   });
@@ -174,6 +186,27 @@ router.post('/contact', (req, res) => {
 
 router.get('/', (req, res) => {
   res.sendFile('main.html', { root: './public' });
+});
+
+router.get('/event/:id', (req, res) => {
+  const eventId = req.params.id;
+  database.getEventById(eventId, (err, event) => {
+    if (err || !event) return res.status(404).json({ error: 'Event not found' });
+    res.json(event);
+  });
+});
+
+router.post('/admin/update_event/:id', (req, res) => {
+  const { id } = req.params;
+  const { name, date, location, description, image } = req.body;
+  database.updateEventById(id, { name, date, location, description, image }, (err, result) => {
+    if (err) return res.status(500).json({ error: 'Database update failed' });
+    res.json(result);
+  });
+});
+
+router.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, '../public/404.html'));
 });
 
 module.exports = router;
