@@ -22,7 +22,7 @@
   <main>
     <div class="profile-container">
       <section class="profile-info">
-        <h2>Καλωσήρθες, Εθελοντή!</h2>
+        <h2 id="welcome-msg"></h2>
         <form id="profile-form">
           <label for="username">Όνομα Χρήστη</label>
           <input type="text" id="username" name="username" readonly />
@@ -58,6 +58,7 @@
           document.getElementById('username').value = data.user.username;
           document.getElementById('email').value = data.user.email;
           document.getElementById('phone').value = data.user.phone || '';
+          document.getElementById('welcome-msg').textContent = `Καλωσήρθες, ${data.user.username}!`;
           const activityList = document.getElementById('activity-list');
           data.activities.forEach(activity => {
             const li = document.createElement('li');
