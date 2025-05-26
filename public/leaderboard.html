@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Κατάταξη Εθελοντών</title>
+  <link rel="stylesheet" href="/leaderboard.css" />
+</head>
+<body>
+  <header>
+    <h1>Κατάταξη Εθελοντών</h1>
+    <nav id="main-nav">
+      <a href="/main.html">Αρχική</a>
+      <a href="/leaderboard.html">Κατάταξη</a>
+      <a href="/contact.html">Επικοινωνία</a>
+      <a href="/register.html" id="register-link">Εγγραφή</a>
+      <a href="/login.html" id="login-link">Σύνδεση</a>
+    </nav>
+  </header>
+  <main>
+    <div class="leaderboard-container">
+    <h2>Κορυφαίοι Εθελοντές</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Χρήστης</th>
+          <th>Δράσεις</th>
+          <th>Badges</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-table"></tbody>
+    </table>
+    </div>
+  </main>
+  <footer>
+    <p>Επικοινωνήστε μαζί μας: <a href="mailto:info@volunteer.gr">info@volunteer.gr</a> | © 2025</p>
+  </footer>
+  <script>
+    fetch('/leaderboard')
+      .then(response => response.json())
+      .then(data => {
+        const tableBody = document.getElementById('leaderboard-table');
+        data.forEach(user => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${user.username}</td><td>${user.actions}</td><td>${user.role === 'admin'? '🛡️': user.badges > 0? '🏅'.repeat(user.badges): ''}</td>`;
+          tableBody.appendChild(tr);
+        });
+      });
+  </script>
+
+  <script>
+    fetch('/profile')
+      .then(res => res.json())
+      .then(data => {
+        if (data?.user?.username) {
+          const loginLink = document.getElementById('login-link');
+          if (loginLink) {
+            loginLink.textContent = 'Προφίλ';
+            loginLink.href = '/profile.html';
+          }
+
+          const registerLink = document.getElementById('register-link');
+          if (registerLink) {
+            registerLink.remove();
+          }
+
+          if (!document.getElementById('logout-link')) {
+            const nav = document.getElementById('main-nav');
+            const logout = document.createElement('a');
+            logout.href = '/logout';
+            logout.id = 'logout-link';
+            logout.textContent = 'Αποσύνδεση';
+            nav.appendChild(logout);
+          }
+
+          if (data?.user?.role === 'admin') {
+            const nav = document.getElementById('main-nav');
+            const adminLink = document.createElement('a');
+            adminLink.href = '/admin.html';
+            adminLink.textContent = 'Διαχειριστής';
+            nav.appendChild(adminLink);
+          }
+        }
+      });
+  </script>
+</body>
+</html>

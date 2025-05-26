@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Το Προφίλ Μου</title>
+  <link rel="stylesheet" href="/profile.css" />
+</head>
+<body>
+  <header class="profile-header">
+    <h1>Το Προφίλ Μου</h1>
+    <nav id="main-nav">
+      <a href="/main.html">Αρχική</a>
+      <a href="/leaderboard.html">Κατάταξη</a>
+      <a href="/contact.html">Επικοινωνία</a>
+      <a href="/profile.html">Προφίλ</a>
+      <a href="/logout" id="logout-link">Αποσύνδεση</a>
+    </nav>
+  </header>
+
+  <!-- Layout flex wrapper -->
+  <main>
+    <div class="profile-container">
+      <section class="profile-info">
+        <h2>Καλωσήρθες, Εθελοντή!</h2>
+        <form id="profile-form">
+          <label for="username">Όνομα Χρήστη</label>
+          <input type="text" id="username" name="username" readonly />
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+          <label for="phone">Τηλέφωνο</label>
+          <input type="tel" id="phone" name="phone" />
+          <label for="password">Αλλαγή Κωδικού</label>
+          <input type="password" id="password" name="password" />
+          <button type="submit">Αποθήκευση</button>
+        </form>
+        <button id="delete-account">Διαγραφή Λογαριασμού</button>
+      </section>
+      <section class="profile-activities">
+        <h2>Οι Δραστηριότητές Μου</h2>
+        <ul id="activity-list"></ul>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>Επικοινωνήστε μαζί μας: <a href="mailto:info@volunteer.gr">info@volunteer.gr</a> | © 2025</p>
+  </footer>
+
+  <script>
+    fetch('/profile')
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+          window.location.href = '/login.html';
+        } else {
+          document.getElementById('username').value = data.user.username;
+          document.getElementById('email').value = data.user.email;
+          document.getElementById('phone').value = data.user.phone || '';
+          const activityList = document.getElementById('activity-list');
+          data.activities.forEach(activity => {
+            const li = document.createElement('li');
+            li.textContent = `${activity.name} - ${activity.date} - ${activity.location}`;
+            activityList.appendChild(li);
+          });
+        }
+        if (data?.user?.role === 'admin') {
+            const nav = document.getElementById('main-nav');
+            const adminLink = document.createElement('a');
+            adminLink.href = '/admin.html';
+            adminLink.textContent = 'Διαχειριστής';
+            nav.appendChild(adminLink);
+          }
+      });
+
+      document.getElementById('profile-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const formData = Object.fromEntries(new FormData(e.target).entries());
+        const response = await fetch('/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+        const data = await response.json();
+
+        const existingMessage = document.getElementById('update-msg');
+        if (existingMessage) existingMessage.remove();
+
+        const msg = document.createElement('p');
+        msg.id = 'update-msg';
+        msg.textContent = data.message || data.error || 'Αποτυχία ενημέρωσης.';
+        msg.style.color = response.ok ? 'green' : 'red';
+        document.querySelector('.profile-info').appendChild(msg);
+      });
+
+    document.getElementById('delete-account').addEventListener('click', async () => {
+      if (confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε τον λογαριασμό σας;')) {
+        const response = await fetch('/delete_account', { method: 'POST' });
+        const data = await response.json();
+        if (response.ok) window.location.href = '/main.html';
+      }
+    });
+  </script>
+</body>
+</html>

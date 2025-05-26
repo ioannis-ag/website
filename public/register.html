@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Εγγραφή</title>
+  <link rel="stylesheet" href="/register.css" />
+
+  <script>
+    fetch('/profile')
+      .then(res => res.json())
+      .then(data => {
+        if (data?.user?.username) {
+          window.location.href = '/profile.html';
+        }
+      });
+  </script>
+</head>
+<body class="register-body">
+  <header>
+    <h1>Εγγραφή</h1>
+    <nav id="main-nav">
+      <a href="/main.html">Αρχική</a>
+      <a href="/leaderboard.html">Κατάταξη</a>
+      <a href="/contact.html">Επικοινωνία</a>
+      <a href="/register.html">Εγγραφή</a>
+      <a href="/login.html" id="login-link">Σύνδεση</a>
+    </nav>
+  </header>
+  <main class="register-container">
+    <form id="register-form">
+      <label for="username">Όνομα Χρήστη</label>
+      <input type="text" id="username" name="username" required />
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
+      <label for="phone">Τηλέφωνο</label>
+      <input type="tel" id="phone" name="phone" />
+      <label for="password">Κωδικός</label>
+      <input type="password" id="password" name="password" required />
+      <button type="submit">Εγγραφή</button>
+    </form>
+  </main>
+  <footer>
+    <p>Επικοινωνήστε μαζί μας: <a href="mailto:info@volunteer.gr">info@volunteer.gr</a> | © 2025</p>
+  </footer>
+  <script>
+    document.getElementById('register-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const formData = Object.fromEntries(new FormData(e.target).entries());
+      const response = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
+      if (response.ok) window.location.href = '/login.html';
+    });
+  </script>
+</body>
+</html>

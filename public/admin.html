@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Πίνακας Διαχειριστή</title>
+  <link rel="stylesheet" href="/admin.css" />
+</head>
+<body>
+  <header>
+    <h1>Πίνακας Διαχειριστή</h1>
+    <nav id="main-nav">
+      <a href="/main.html">Αρχική</a>
+      <a href="/leaderboard.html">Κατάταξη</a>
+      <a href="/contact.html">Επικοινωνία</a>
+      <a href="/profile.html">Προφίλ</a>
+      <a href="/logout" id="logout-link">Αποσύνδεση</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="admin-container">
+      <section class="action-section">
+        <h2>Διαχείριση Δράσεων</h2>
+        <form id="event-form">
+          <input type="text" id="name" name="name" placeholder="Όνομα Δράσης" required />
+          <input type="date" id="date" name="date" required />
+          <input type="text" id="location" name="location" placeholder="Τοποθεσία" required />
+          <button type="submit">Προσθήκη Δράσης</button>
+        </form>
+        <h3>Υπάρχουσες Δράσεις</h3>
+        <ul id="event-list"></ul>
+      </section>
+
+      <section class="user-section">
+        <h2>Διαχείριση Χρηστών</h2>
+        <ul id="user-list"></ul>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>Επικοινωνήστε μαζί μας: <a href="mailto:info@volunteer.gr">info@volunteer.gr</a> | © 2025</p>
+  </footer>
+
+  <script>
+    fetch('/admin/users')
+      .then(res => res.json())
+      .then(users => {
+        const userList = document.getElementById('user-list');
+        userList.innerHTML = '';
+        users.forEach(user => {
+          const li = document.createElement('li');
+
+          const userInfo = document.createElement('div');
+          userInfo.textContent = `${user.username} (${user.email}, ${user.participations} συμμετοχές)`;
+
+          const buttonRow = document.createElement('div');
+          buttonRow.className = 'button-row';
+
+          const roleBtn = document.createElement('button');
+          roleBtn.textContent = user.role === 'admin' ? 'Υποβάθμιση σε Χρήστη' : 'Αναβάθμιση σε Διαχειριστή';
+          roleBtn.className = 'role-toggle-btn';
+          roleBtn.onclick = async () => {
+            const res = await fetch(`/admin/toggle_role/${user.id}`, { method: 'POST' });
+            if (res.ok) location.reload();
+          };
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.textContent = 'Διαγραφή';
+          deleteBtn.className = 'delete-user-btn';
+          deleteBtn.onclick = async () => {
+            const res = await fetch(`/admin/delete_user/${user.id}`, { method: 'POST' });
+            if (res.ok) location.reload();
+          };
+
+          buttonRow.appendChild(roleBtn);
+          buttonRow.appendChild(deleteBtn);
+
+          li.appendChild(userInfo);
+          li.appendChild(buttonRow);
+          userList.appendChild(li);
+        });
+      });
+
+    fetch('/admin/events')
+      .then(res => res.json())
+      .then(events => {
+        const eventList = document.getElementById('event-list');
+        events.forEach(event => {
+          const li = document.createElement('li');
+          const top = document.createElement('div');
+          top.classList.add('event-top');
+          top.innerHTML = `<strong>${event.name}</strong> - ${event.date} - ${event.location}`;
+          const delBtn = document.createElement('button');
+          delBtn.textContent = 'Διαγραφή Δράσης';
+          delBtn.onclick = async () => {
+            const res = await fetch('/admin/delete_event/' + event.id, { method: 'POST' });
+            if (res.ok) location.reload();
+          };
+          top.appendChild(delBtn);
+          li.appendChild(top);
+
+          if (event.attendees) {
+            const attendees = event.attendees.split(',');
+            const ul = document.createElement('ul');
+            attendees.forEach(name => {
+              const userLi = document.createElement('li');
+              const span = document.createElement('span');
+              span.textContent = name;
+              const removeBtn = document.createElement('button');
+              removeBtn.textContent = 'Αφαίρεση';
+              removeBtn.onclick = async () => {
+                const res = await fetch('/admin/users');
+                const users = await res.json();
+                const user = users.find(u => u.username === name);
+                if (!user) return;
+                const r = await fetch(`/admin/remove_attendee/${event.id}/${user.id}`, { method: 'POST' });
+                if (r.ok) location.reload();
+              };
+              userLi.appendChild(span);
+              userLi.appendChild(removeBtn);
+              ul.appendChild(userLi);
+            });
+            li.appendChild(ul);
+          } else {
+            const p = document.createElement('p');
+            p.innerHTML = '<em>Κανείς δεν έχει δηλώσει συμμετοχή.</em>';
+            li.appendChild(p);
+          }
+
+          eventList.appendChild(li);
+        });
+      });
+
+    document.getElementById('event-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const formData = {
+        name: document.getElementById('name').value,
+        date: document.getElementById('date').value,
+        location: document.getElementById('location').value
+      };
+      const response = await fetch('/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      if (response.ok) location.reload();
+    });
+  </script>
+</body>
+</html>
