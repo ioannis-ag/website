@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ΠΛΗΡΟΦΟΡΙΕΣ ΔΡΑΣΗΣ</title>
+  <link rel="stylesheet" href="/activities.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .event-details {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      margin: 2rem auto;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .event-details img {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .event-details h2 {
+      margin: 0.5rem 0;
+    }
+
+    .event-details p {
+      margin: 0.3rem 0;
+      line-height: 1.5;
+      max-width: 700px;
+    }
+
+    .join-btn,
+    .back-btn {
+      margin-top: 1rem;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 0.4rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .join-btn {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .join-btn.leave {
+      background-color: #c62828;
+    }
+
+    .join-btn:hover {
+      opacity: 0.9;
+    }
+
+    .back-btn {
+      background-color: #ccc;
+      color: #333;
+      text-decoration: none;
+      display: inline-block;
+    }
+    nav a {
+        display: inline-block;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+    nav a:hover {
+        transform: translateY(-3px);
+        color: #ffd700;
+    }
+
+    nav a:hover {
+        transform: translateY(-3px);
+        color: #ffd700;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    footer {
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 2rem 1rem 1rem;
+    border-top: 1px solid #ccc;
+    font-size: 0.95rem;
+    }
+
+    .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+    gap: 1.5rem;
+    }
+
+    .footer-left {
+    flex: 1;
+    min-width: 250px;
+    }
+
+    .footer-left p {
+    margin: 0;
+    line-height: 1.6;
+    }
+
+    .footer-left a {
+    color: #2e7d32;
+    text-decoration: none;
+    }
+
+    .footer-left a:hover {
+    text-decoration: underline;
+    }
+
+    .footer-right {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+    font-size: 1.5rem;
+    }
+
+    .footer-right a {
+    color: #2e7d32;
+    transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .footer-right a:hover {
+    transform: translateY(-2px);
+    color: #1b5e20;
+    }
+
+    .footer-bottom {
+    text-align: center;
+    margin-top: 1rem;
+    color: #666;
+    }
+    h1 {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto Condensed:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+        <img src="/images/icon.png" alt="Volunteer Logo" style="height: 80px; margin-left: 1rem;" />
+    
+        <h1 style="flex-grow: 1; text-align: center; margin: 0;">
+          ΠΛΗΡΟΦΟΡΙΕΣ ΔΡΑΣΗΣ
+        </h1>
+    
+        <div style="width: 80px; margin-right: 1rem;"></div>
+      </div>
+    <nav id="main-nav">
+      <a href="/main.html">ΑΡΧΙΚΗ</a>
+      <a href="/activities.html">ΔΡΑΣΤΗΡΙΟΤΗΤΕΣ</a>
+      <a href="/contact.html">ΕΠΙΚΟΙΝΩΝΙΑ</a>
+      <a href="/leaderboard.html"><i data-lucide="trophy"></i></a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="event-details" id="event-container">
+      <p>Φόρτωση...</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-left">
+        <p>
+          <strong>Διεύθυνση:</strong> Λεωφόρος Εθελοντών 123, Αθήνα 10435<br />
+          <strong>Τηλέφωνο:</strong> <a href="tel:+302112345678">(+30) 211 234 5678</a><br />
+          <strong>Email:</strong> <a href="mailto:info@volunteer.gr">info@volunteer.gr</a>
+        </p>
+      </div>
+      <div class="footer-right">
+        <a href="/" target="_blank"><i data-lucide="instagram"></i></a>
+        <a href="/" target="_blank"><i data-lucide="facebook"></i></a>
+        <a href="/" target="_blank"><i data-lucide="twitter"></i></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2025 Εθελοντικός Οργανισμός Νεολαίας
+    </div>
+  </footer>
+
+  <script>
+    const eventId = new URLSearchParams(window.location.search).get('id');
+    let currentUser = null;
+    let currentEvent = null;
+
+    fetch('/profile')
+      .then(res => res.json())
+      .then(data => {
+        currentUser = data.user;
+        const nav = document.getElementById('main-nav');
+
+        if (currentUser?.role === 'admin') {
+          const admin = document.createElement('a');
+          admin.href = '/admin.html';
+          admin.innerHTML = `<i data-lucide="settings"></i>`;
+          nav.appendChild(admin);
+        }
+
+        if (currentUser) {
+          const profile = document.createElement('a');
+          profile.href = '/profile.html';
+          profile.innerHTML = `<i data-lucide="user"></i>`;
+          nav.appendChild(profile);
+
+          const logout = document.createElement('a');
+          logout.href = '/logout';
+          logout.innerHTML = `<i data-lucide="log-out"></i>`;
+          nav.appendChild(logout);
+        } else {
+          const register = document.createElement('a');
+          register.href = '/register.html';
+          register.innerHTML = '<i data-lucide="user-plus"></i>';
+          nav.appendChild(register);
+
+          const login = document.createElement('a');
+          login.href = '/login.html';
+          login.innerHTML = '<i data-lucide="log-in"></i>';
+          nav.appendChild(login);
+        }
+
+        lucide.createIcons();
+        loadEvent();
+      });
+
+    function loadEvent() {
+      fetch('/events')
+        .then(res => res.json())
+        .then(({ upcoming, completed }) => {
+          const allEvents = [...upcoming, ...completed];
+          currentEvent = allEvents.find(e => e.id == eventId);
+          renderEvent();
+        });
+    }
+
+    function renderEvent() {
+      const container = document.getElementById('event-container');
+
+      if (!currentEvent) {
+        container.innerHTML = '<p>Η δράση δεν βρέθηκε.</p>';
+        return;
+      }
+
+      const isJoined = !!currentEvent.joined;
+      const eventDate = new Date(currentEvent.date);
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      const isUpcoming = eventDate >= now;
+
+      container.innerHTML = `
+        <img src="${currentEvent.image || '/images/default.jpg'}" alt="Εικόνα δράσης">
+        <h2>${currentEvent.name}</h2>
+        <p><strong>Ημερομηνία:</strong> ${currentEvent.date}</p>
+        <p><strong>Τοποθεσία:</strong> ${currentEvent.location}</p>
+        <p><strong>Περιγραφή:</strong></p>
+        <p>${currentEvent.description || 'Δεν υπάρχει περιγραφή.'}</p>
+        ${
+          currentUser && isUpcoming
+            ? `<button class="join-btn ${isJoined ? 'leave' : ''}" id="participation-btn">
+                 ${isJoined ? 'Ακύρωση Συμμετοχής' : 'Συμμετοχή'}
+               </button>`
+            : currentUser && !isUpcoming
+            ? `<p><em>Η δράση έχει ολοκληρωθεί. Δεν είναι δυνατή η συμμετοχή.</em></p>`
+            : `<a href="/login.html" class="join-btn">Σύνδεση για Συμμετοχή</a>`
+        }
+        <br><a class="back-btn" href="/activities.html">⟵ Επιστροφή στις Δράσεις</a>
+      `;
+
+      if (currentUser && isUpcoming) {
+        document.getElementById('participation-btn').addEventListener('click', () => {
+          toggleParticipation();
+        });
+      }
+    }
+
+    function toggleParticipation() {
+      const isJoined = !!currentEvent.joined;
+      const url = isJoined
+        ? `/cancel_participation/${currentEvent.id}`
+        : `/participate/${currentEvent.id}`;
+
+      fetch(url, { method: 'POST' })
+        .then(res => res.json())
+        .then(() => {
+          currentEvent.joined = isJoined ? 0 : 1;
+          renderEvent();
+        });
+    }
+  </script>
+</body>
+</html>
